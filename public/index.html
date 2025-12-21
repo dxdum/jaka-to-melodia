@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaka To Melodia?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #0a0a0f;
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(0, 255, 136, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 200, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(139, 0, 255, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 50%, #b84dff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(0, 255, 136, 0.5);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.4)); }
+            to { filter: drop-shadow(0 0 40px rgba(0, 212, 255, 0.6)); }
+        }
+
+        .round-indicator {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 32px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 212, 255, 0.2));
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.1);
+        }
+
+        /* Rankings Section */
+        .rankings {
+            background: linear-gradient(135deg, rgba(15, 15, 25, 0.9), rgba(20, 20, 35, 0.9));
+            border-radius: 4px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rankings::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, #00d4ff, transparent);
+        }
+
+        .rankings h2 {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #00ff88;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .teams-ranking {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .team-card {
+            background: linear-gradient(135deg, rgba(30, 30, 50, 0.8), rgba(20, 20, 35, 0.8));
+            border-radius: 4px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #333;
+        }
+
+        .team-card.rank-1 {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 212, 255, 0.1));
+            border-color: rgba(0, 255, 136, 0.4);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.15);
+            padding: 20px 28px;
+        }
+
+        .team-card.rank-1::before {
+            background: linear-gradient(180deg, #00ff88, #00d4ff);
+            box-shadow: 0 0 15px #00ff88;
+        }
+
+        .team-card.rank-2::before {
+            background: linear-gradient(180deg, #c0c0c0, #888);
+        }
+
+        .team-card.rank-3::before {
+            background: linear-gradient(180deg, #ff9f43, #ee5a24);
+        }
+
+        .team-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .team-rank {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #444;
+            min-width: 60px;
+        }
+
+        .rank-1 .team-rank {
+            color: #00ff88;
+            font-size: 2rem;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        .rank-2 .team-rank { color: #c0c0c0; }
+        .rank-3 .team-rank { color: #ff9f43; }
+
+        .team-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .rank-1 .team-name {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #fff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .team-points {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        .rank-1 .team-points {
+            font-size: 2.2rem;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .team-points span {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #666;
+            margin-left: 6px;
+            letter-spacing: 2px;
+        }
+
+        /* Categories Section */
+        .categories-section {
+            margin-top: 40px;
+        }
+
+        .categories-section h2 {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #00d4ff;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, rgba(15, 15, 25, 0.95), rgba(25, 25, 40, 0.95));
+            border-radius: 4px;
+            padding: 28px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            opacity: 0.5;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 212, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.15);
+        }
+
+        .category-card:hover::before {
+            opacity: 1;
+        }
+
+        .category-card.empty {
+            opacity: 0.3;
+        }
+
+        .category-card.empty::after {
+            content: 'DONE';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-12deg);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: rgba(255, 50, 50, 0.6);
+            letter-spacing: 6px;
+        }
+
+        .category-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #fff;
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+        }
+
+        .tracks-remaining {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            text-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+        }
+
+        .tracks-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .tracks-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 20px;
+        }
+
+        .track-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            background: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .track-dot.used {
+            background: #222;
+            box-shadow: none;
+        }
+
+        .points-rule {
+            font-size: 0.7rem;
+            color: #00ff88;
+            margin-top: 16px;
+            font-weight: 600;
+            padding: 8px 14px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 2px;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+
+        /* Connection status */
+        .connection-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 2px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            z-index: 1000;
+        }
+
+        .connection-status.connected {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .connection-status.disconnected {
+            background: rgba(255, 50, 50, 0.1);
+            border: 1px solid rgba(255, 50, 50, 0.4);
+            color: #ff3232;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Round 3 Timer Display */
+        .round3-display {
+            display: none !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+            min-height: 400px;
+        }
+
+        .round3-display.active {
+            display: flex !important;
+        }
+
+        .active-team-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00d4ff;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+        }
+
+        .timer-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: #666;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .timer-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            text-shadow: 0 0 80px rgba(0, 255, 136, 0.4);
+        }
+
+        .timer-display.warning {
+            background: linear-gradient(135deg, #ff9f43, #ee5a24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: timerGlow 0.5s ease-in-out infinite alternate;
+        }
+
+        .timer-display.danger {
+            background: linear-gradient(135deg, #ff5050, #ff0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: timerPulse 0.3s infinite;
+        }
+
+        @keyframes timerGlow {
+            from { filter: drop-shadow(0 0 20px rgba(255, 159, 67, 0.5)); }
+            to { filter: drop-shadow(0 0 40px rgba(238, 90, 36, 0.8)); }
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.02); }
+        }
+
+        .timer-status {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            margin-top: 30px;
+            padding: 12px 30px;
+            border-radius: 4px;
+        }
+
+        .timer-status.running {
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            animation: statusPulse 1s infinite;
+        }
+
+        .timer-status.paused {
+            background: rgba(255, 159, 67, 0.2);
+            border: 2px solid #ff9f43;
+            color: #ff9f43;
+        }
+
+        .timer-status.finished {
+            background: rgba(255, 50, 50, 0.2);
+            border: 2px solid #ff5050;
+            color: #ff5050;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 136, 0.6); }
+        }
+
+        .waiting-message {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.5rem;
+            color: #666;
+            letter-spacing: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+                letter-spacing: 2px;
+            }
+
+            .team-card {
+                padding: 14px 18px;
+            }
+
+            .team-card.rank-1 {
+                padding: 16px 20px;
+            }
+
+            .team-rank {
+                font-size: 1.2rem;
+                min-width: 45px;
+            }
+
+            .rank-1 .team-rank {
+                font-size: 1.5rem;
+            }
+
+            .team-name {
+                font-size: 1.1rem;
+            }
+
+            .tracks-remaining {
+                font-size: 3.5rem;
+            }
+
+            .timer-display {
+                font-size: 8rem;
+            }
+
+            .active-team-name {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>JAKA TO MELODIA</h1>
+        <div class="round-indicator" id="roundIndicator">RUNDA 1</div>
+    </header>
+
+    <div class="container">
+        <section class="rankings">
+            <h2>Ranking</h2>
+            <div class="teams-ranking" id="teamsRanking"></div>
+        </section>
+
+        <section class="categories-section" id="categoriesSection">
+            <h2 id="categoriesTitle">Kategorie</h2>
+            <div class="categories-grid" id="categoriesGrid"></div>
+        </section>
+
+        <section class="round3-display" id="round3Display">
+            <div id="round3Content">
+                <div class="waiting-message">Oczekiwanie na wybor druzyny...</div>
+            </div>
+        </section>
+    </div>
+
+    <div class="connection-status connected" id="connectionStatus">LIVE</div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let gameState = null;
+
+        socket.on('connect', () => {
+            document.getElementById('connectionStatus').className = 'connection-status connected';
+            document.getElementById('connectionStatus').textContent = 'LIVE';
+        });
+
+        socket.on('disconnect', () => {
+            document.getElementById('connectionStatus').className = 'connection-status disconnected';
+            document.getElementById('connectionStatus').textContent = 'OFFLINE';
+        });
+
+        socket.on('gameState', (state) => {
+            gameState = state;
+            updateUI();
+        });
+
+        function updateUI() {
+            if (!gameState) return;
+            updateRoundIndicator();
+            updateTeamsRanking();
+            updateCategories();
+            updateRound3Display();
+        }
+
+        function updateRoundIndicator() {
+            document.getElementById('roundIndicator').textContent = `RUNDA ${gameState.currentRound}`;
+
+            if (gameState.currentRound === 1) {
+                document.getElementById('categoriesTitle').textContent = 'Kategorie — Runda 1';
+            } else if (gameState.currentRound === 2) {
+                document.getElementById('categoriesTitle').textContent = 'Kategorie Licytacji — Runda 2';
+            } else {
+                document.getElementById('categoriesTitle').textContent = 'Final';
+            }
+        }
+
+        function updateTeamsRanking() {
+            const container = document.getElementById('teamsRanking');
+            const sortedTeams = [...gameState.teams].sort((a, b) => b.points - a.points);
+
+            let currentRank = 1;
+            sortedTeams.forEach((team, index) => {
+                if (index > 0 && sortedTeams[index - 1].points > team.points) {
+                    currentRank = index + 1;
+                }
+                team.rank = currentRank;
+            });
+
+            container.innerHTML = sortedTeams.map(team => `
+                <div class="team-card rank-${team.rank}">
+                    <div class="team-left">
+                        <div class="team-rank">#${team.rank}</div>
+                        <div class="team-name">${escapeHtml(team.name)}</div>
+                    </div>
+                    <div class="team-points">${team.points}<span>PKT</span></div>
+                </div>
+            `).join('');
+        }
+
+        function updateCategories() {
+            const categoriesSection = document.getElementById('categoriesSection');
+
+            // Hide categories section in Round 3
+            if (gameState.currentRound === 3) {
+                categoriesSection.style.display = 'none';
+                return;
+            }
+
+            categoriesSection.style.display = 'block';
+            const container = document.getElementById('categoriesGrid');
+            const categories = gameState.currentRound === 1
+                ? gameState.round1Categories
+                : gameState.round2Categories;
+
+            container.innerHTML = categories.map(cat => {
+                const dots = [];
+                for (let i = 0; i < cat.totalTracks; i++) {
+                    dots.push(`<div class="track-dot ${i >= cat.remainingTracks ? 'used' : ''}"></div>`);
+                }
+
+                return `
+                    <div class="category-card ${cat.remainingTracks === 0 ? 'empty' : ''}">
+                        <div class="category-name">${escapeHtml(cat.name)}</div>
+                        <div class="tracks-remaining">${cat.remainingTracks}</div>
+                        <div class="tracks-label">Pozostalo</div>
+                        <div class="tracks-dots">${dots.join('')}</div>
+                        ${cat.pointsRule ? `<div class="points-rule">${escapeHtml(cat.pointsRule)}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateRound3Display() {
+            const round3Display = document.getElementById('round3Display');
+            const round3Content = document.getElementById('round3Content');
+
+            // Only show in Round 3
+            if (gameState.currentRound !== 3) {
+                round3Display.classList.remove('active');
+                return;
+            }
+
+            round3Display.classList.add('active');
+
+            // Ensure round3 state exists
+            const r3 = gameState.round3 || { activeTeamId: null, timerRunning: false, timeRemaining: 60 };
+
+            if (!r3.activeTeamId) {
+                round3Content.innerHTML = '<div class="waiting-message">Oczekiwanie na wybor druzyny...</div>';
+                return;
+            }
+
+            const activeTeam = gameState.teams.find(t => t.id === r3.activeTeamId);
+            let timerClass = 'timer-display';
+            let statusClass = 'timer-status';
+            let statusText = '';
+
+            if (r3.timeRemaining <= 10) {
+                timerClass += ' danger';
+            } else if (r3.timeRemaining <= 20) {
+                timerClass += ' warning';
+            }
+
+            if (r3.timerRunning) {
+                statusClass += ' running';
+                statusText = 'CZAS IDZIE';
+            } else if (r3.timeRemaining === 0) {
+                statusClass += ' finished';
+                statusText = 'CZAS MINĄŁ';
+            } else {
+                statusClass += ' paused';
+                statusText = 'PAUZA';
+            }
+
+            round3Content.innerHTML = `
+                <div class="active-team-name">${escapeHtml(activeTeam.name)}</div>
+                <div class="timer-label">Pozostaly czas</div>
+                <div class="${timerClass}">${r3.timeRemaining}</div>
+                <div class="${statusClass}">${statusText}</div>
+            `;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

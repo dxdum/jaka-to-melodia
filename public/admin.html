@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #0a0a0f;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 200, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-box {
+            background: linear-gradient(135deg, rgba(15, 15, 25, 0.95), rgba(20, 20, 35, 0.95));
+            border-radius: 4px;
+            padding: 48px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 255, 136, 0.1);
+            position: relative;
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, #00d4ff, transparent);
+        }
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 32px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #00ff88;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1rem;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            margin-bottom: 16px;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 14px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            border: none;
+            border-radius: 4px;
+            color: #0a0a0f;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .login-box button:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .login-error {
+            color: #ff3232;
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(15, 15, 25, 0.9), rgba(20, 20, 35, 0.9));
+            border-radius: 4px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, #00d4ff, transparent);
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .section {
+            background: linear-gradient(135deg, rgba(15, 15, 25, 0.9), rgba(20, 20, 35, 0.9));
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .section h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00d4ff;
+            margin-bottom: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        /* Round Switcher */
+        .round-switcher {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .round-btn {
+            padding: 16px 40px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            background: transparent;
+            color: #666;
+            border-radius: 4px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .round-btn:hover {
+            border-color: #00ff88;
+            color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .round-btn.active {
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            border-color: transparent;
+            color: #0a0a0f;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        /* Teams Grid */
+        .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .team-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .team-card input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            margin-bottom: 16px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .team-card input[type="text"]:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+        }
+
+        .points-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .points-btn {
+            width: 44px;
+            height: 44px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .points-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .points-btn:active {
+            transform: scale(0.95);
+        }
+
+        .points-btn.minus {
+            background: rgba(255, 50, 50, 0.2);
+            border: 1px solid rgba(255, 50, 50, 0.4);
+            color: #ff5050;
+        }
+
+        .points-btn.minus:hover {
+            box-shadow: 0 0 20px rgba(255, 50, 50, 0.3);
+        }
+
+        .points-btn.plus {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            color: #00ff88;
+        }
+
+        .points-btn.plus:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .points-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00ff88;
+            min-width: 60px;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .remove-team-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: rgba(255, 50, 50, 0.3);
+            color: #ff5050;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+
+        .remove-team-btn:hover {
+            background: #ff5050;
+            color: #fff;
+        }
+
+        .team-card {
+            position: relative;
+        }
+
+        .add-team-btn {
+            width: 100%;
+            padding: 20px;
+            background: transparent;
+            border: 2px dashed rgba(0, 255, 136, 0.3);
+            border-radius: 4px;
+            color: #00ff88;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-team-btn:hover {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        /* Categories Grid */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .category-tile {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .category-tile.empty {
+            opacity: 0.3;
+        }
+
+        .category-tile h3 {
+            font-size: 0.75rem;
+            margin-bottom: 12px;
+            color: #fff;
+            line-height: 1.3;
+            font-weight: 600;
+        }
+
+        .track-tiles {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .track-tile {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+        }
+
+        .track-tile.active {
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            color: #0a0a0f;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .track-tile.inactive {
+            background: rgba(255, 255, 255, 0.05);
+            color: #444;
+        }
+
+        .track-tile:hover {
+            transform: scale(1.15);
+        }
+
+        /* Round 3 Controls */
+        .round3-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .team-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .team-select-btn {
+            padding: 12px 24px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            background: transparent;
+            color: #888;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .team-select-btn:hover {
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
+        .team-select-btn.active {
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            border-color: transparent;
+            color: #0a0a0f;
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.4);
+        }
+
+        .timer-display-admin {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 60px rgba(0, 255, 136, 0.3);
+        }
+
+        .timer-display-admin.warning {
+            background: linear-gradient(135deg, #ff9f43, #ee5a24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .timer-display-admin.danger {
+            background: linear-gradient(135deg, #ff5050, #ff0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: timerPulse 0.5s infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .timer-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .timer-btn {
+            padding: 16px 40px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .timer-btn.start {
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            color: #0a0a0f;
+        }
+
+        .timer-btn.start:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            transform: scale(1.05);
+        }
+
+        .timer-btn.stop {
+            background: linear-gradient(135deg, #ff5050, #ff0000);
+            color: #fff;
+        }
+
+        .timer-btn.stop:hover {
+            box-shadow: 0 0 30px rgba(255, 50, 50, 0.5);
+            transform: scale(1.05);
+        }
+
+        .timer-btn.reset-timer {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #888;
+        }
+
+        .timer-btn.reset-timer:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+
+        .active-team-display {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .active-team-display span {
+            color: #00ff88;
+            font-weight: 700;
+        }
+
+        /* Reset Button */
+        .reset-btn {
+            display: block;
+            width: 100%;
+            max-width: 250px;
+            margin: 24px auto 0;
+            padding: 14px 28px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: transparent;
+            border: 2px solid rgba(255, 50, 50, 0.5);
+            border-radius: 4px;
+            color: #ff5050;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255, 50, 50, 0.2);
+            box-shadow: 0 0 30px rgba(255, 50, 50, 0.2);
+        }
+
+        /* Connection Status */
+        .connection-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            z-index: 1000;
+        }
+
+        .connection-status.connected {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            color: #00ff88;
+        }
+
+        .connection-status.disconnected {
+            background: rgba(255, 50, 50, 0.1);
+            border: 1px solid rgba(255, 50, 50, 0.4);
+            color: #ff5050;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-panel {
+                padding: 12px;
+            }
+
+            .section {
+                padding: 16px;
+            }
+
+            .round-btn {
+                padding: 12px 24px;
+                font-size: 0.8rem;
+            }
+
+            .team-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <h1>Control Panel</h1>
+            <input type="password" id="passwordInput" placeholder="Password..." autofocus>
+            <button onclick="login()">Access</button>
+            <div class="login-error" id="loginError">Access Denied</div>
+        </div>
+    </div>
+
+    <div class="admin-panel" id="adminPanel">
+        <header>
+            <h1>Game Master Control</h1>
+        </header>
+
+        <div class="section">
+            <h2>Round Select</h2>
+            <div class="round-switcher">
+                <button class="round-btn active" id="round1Btn" onclick="switchRound(1)">Round 1</button>
+                <button class="round-btn" id="round2Btn" onclick="switchRound(2)">Round 2</button>
+                <button class="round-btn" id="round3Btn" onclick="switchRound(3)">Round 3</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Teams & Points</h2>
+            <div class="teams-grid" id="teamsGrid"></div>
+        </div>
+
+        <div class="section" id="round1Section">
+            <h2>Round 1 — Categories</h2>
+            <div class="categories-grid" id="round1Categories"></div>
+        </div>
+
+        <div class="section" id="round2Section">
+            <h2>Round 2 — Categories</h2>
+            <div class="categories-grid" id="round2Categories"></div>
+        </div>
+
+        <div class="section" id="round3Section">
+            <h2>Round 3 — Final Timer</h2>
+            <div class="round3-controls">
+                <div class="active-team-display" id="activeTeamDisplay">Select a team to start</div>
+                <div class="team-selector" id="teamSelector"></div>
+                <div class="timer-display-admin" id="timerDisplayAdmin">60</div>
+                <div class="timer-buttons">
+                    <button class="timer-btn start" id="startBtn" onclick="startTimer()">Start</button>
+                    <button class="timer-btn stop" id="stopBtn" onclick="stopTimer()">Stop</button>
+                    <button class="timer-btn reset-timer" onclick="resetTimer()">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+    </div>
+
+    <div class="connection-status connected" id="connectionStatus">LIVE</div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let gameState = null;
+        let isLoggedIn = false;
+
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') login();
+        });
+
+        socket.on('connect', () => {
+            document.getElementById('connectionStatus').className = 'connection-status connected';
+            document.getElementById('connectionStatus').textContent = 'LIVE';
+        });
+
+        socket.on('disconnect', () => {
+            document.getElementById('connectionStatus').className = 'connection-status disconnected';
+            document.getElementById('connectionStatus').textContent = 'OFFLINE';
+        });
+
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            socket.emit('adminLogin', password);
+        }
+
+        socket.on('adminLoginResult', (result) => {
+            if (result.success) {
+                isLoggedIn = true;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                updateUI();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+                setTimeout(() => {
+                    document.getElementById('loginError').style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        socket.on('gameState', (state) => {
+            gameState = state;
+            if (isLoggedIn) updateUI();
+        });
+
+        function updateUI() {
+            if (!gameState) return;
+            updateRoundButtons();
+            updateTeams();
+            updateRound1Categories();
+            updateRound2Categories();
+            updateRound3Controls();
+        }
+
+        function updateRoundButtons() {
+            document.getElementById('round1Btn').classList.toggle('active', gameState.currentRound === 1);
+            document.getElementById('round2Btn').classList.toggle('active', gameState.currentRound === 2);
+            document.getElementById('round3Btn').classList.toggle('active', gameState.currentRound === 3);
+        }
+
+        function updateTeams() {
+            const container = document.getElementById('teamsGrid');
+            container.innerHTML = gameState.teams.map(team => `
+                <div class="team-card">
+                    <button class="remove-team-btn" onclick="removeTeam(${team.id})" title="Usuń drużynę">×</button>
+                    <input type="text" value="${escapeHtml(team.name)}"
+                           onchange="updateTeamName(${team.id}, this.value)"
+                           placeholder="Team name">
+                    <div class="points-control">
+                        <button class="points-btn minus" onclick="updatePoints(${team.id}, -1)">−</button>
+                        <div class="points-display">${team.points}</div>
+                        <button class="points-btn plus" onclick="updatePoints(${team.id}, 1)">+</button>
+                    </div>
+                </div>
+            `).join('') + `
+                <button class="add-team-btn" onclick="addTeam()">+ Dodaj drużynę</button>
+            `;
+        }
+
+        function updateRound1Categories() {
+            const container = document.getElementById('round1Categories');
+            container.innerHTML = gameState.round1Categories.map(cat => {
+                const tiles = [];
+                for (let i = cat.totalTracks; i >= 0; i--) {
+                    tiles.push(`
+                        <button class="track-tile ${i <= cat.remainingTracks && i > 0 ? 'active' : 'inactive'}"
+                                onclick="setRound1Tracks(${cat.id}, ${i})">${i}</button>
+                    `);
+                }
+                return `
+                    <div class="category-tile ${cat.remainingTracks === 0 ? 'empty' : ''}">
+                        <h3>${escapeHtml(cat.name)}</h3>
+                        <div class="track-tiles">${tiles.join('')}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateRound2Categories() {
+            const container = document.getElementById('round2Categories');
+            container.innerHTML = gameState.round2Categories.map(cat => {
+                const tiles = [];
+                for (let i = cat.totalTracks; i >= 0; i--) {
+                    tiles.push(`
+                        <button class="track-tile ${i <= cat.remainingTracks && i > 0 ? 'active' : 'inactive'}"
+                                onclick="setRound2Tracks(${cat.id}, ${i})">${i}</button>
+                    `);
+                }
+                return `
+                    <div class="category-tile ${cat.remainingTracks === 0 ? 'empty' : ''}">
+                        <h3>${escapeHtml(cat.name)}</h3>
+                        <div class="track-tiles">${tiles.join('')}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function switchRound(round) {
+            socket.emit('switchRound', round);
+        }
+
+        function addTeam() {
+            console.log('addTeam called, emitting socket event...');
+            socket.emit('addTeam');
+        }
+
+        function removeTeam(teamId) {
+            console.log('removeTeam called for team:', teamId);
+            if (gameState.teams.length <= 2) {
+                alert('Minimum 2 drużyny!');
+                return;
+            }
+            if (confirm('Usunąć tę drużynę?')) {
+                console.log('Confirmed, emitting removeTeam event...');
+                socket.emit('removeTeam', teamId);
+            }
+        }
+
+        function updateTeamName(teamId, name) {
+            socket.emit('updateTeamName', { teamId, name });
+        }
+
+        function updatePoints(teamId, change) {
+            socket.emit('updateTeamPoints', { teamId, change });
+        }
+
+        function setRound1Tracks(categoryId, remaining) {
+            socket.emit('updateRound1Tracks', { categoryId, remaining });
+        }
+
+        function setRound2Tracks(categoryId, remaining) {
+            socket.emit('updateRound2Tracks', { categoryId, remaining });
+        }
+
+        function updateRound3Controls() {
+            // Team selector
+            const selectorContainer = document.getElementById('teamSelector');
+            selectorContainer.innerHTML = gameState.teams.map(team => `
+                <button class="team-select-btn ${gameState.round3.activeTeamId === team.id ? 'active' : ''}"
+                        onclick="selectTeam(${team.id})">${escapeHtml(team.name)}</button>
+            `).join('');
+
+            // Active team display
+            const activeDisplay = document.getElementById('activeTeamDisplay');
+            if (gameState.round3.activeTeamId) {
+                const activeTeam = gameState.teams.find(t => t.id === gameState.round3.activeTeamId);
+                activeDisplay.innerHTML = `Active: <span>${escapeHtml(activeTeam.name)}</span>`;
+            } else {
+                activeDisplay.textContent = 'Select a team to start';
+            }
+
+            // Timer display
+            const timerDisplay = document.getElementById('timerDisplayAdmin');
+            timerDisplay.textContent = gameState.round3.timeRemaining;
+            timerDisplay.className = 'timer-display-admin';
+            if (gameState.round3.timeRemaining <= 10) {
+                timerDisplay.classList.add('danger');
+            } else if (gameState.round3.timeRemaining <= 20) {
+                timerDisplay.classList.add('warning');
+            }
+
+            // Button states
+            document.getElementById('startBtn').disabled = gameState.round3.timerRunning || !gameState.round3.activeTeamId;
+            document.getElementById('stopBtn').disabled = !gameState.round3.timerRunning;
+        }
+
+        function selectTeam(teamId) {
+            socket.emit('round3SelectTeam', teamId);
+        }
+
+        function startTimer() {
+            socket.emit('round3StartTimer');
+        }
+
+        function stopTimer() {
+            socket.emit('round3StopTimer');
+        }
+
+        function resetTimer() {
+            socket.emit('round3ResetTimer');
+        }
+
+        function resetGame() {
+            if (confirm('Reset all progress?')) {
+                socket.emit('resetGame');
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
