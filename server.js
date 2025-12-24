@@ -83,13 +83,8 @@ io.on('connection', (socket) => {
 
   // Add new team
   socket.on('addTeam', () => {
-    console.log('addTeam received, isAdmin:', socket.isAdmin);
-    if (!socket.isAdmin) {
-      console.log('Not admin, ignoring addTeam');
-      return;
-    }
+    if (!socket.isAdmin) return;
     const newId = Math.max(...gameState.teams.map(t => t.id)) + 1;
-    console.log('Adding team with id:', newId);
     gameState.teams.push({
       id: newId,
       name: `Drużyna ${newId}`,
@@ -100,12 +95,8 @@ io.on('connection', (socket) => {
 
   // Remove team
   socket.on('removeTeam', (teamId) => {
-    console.log('removeTeam received for team:', teamId, 'isAdmin:', socket.isAdmin);
-    if (!socket.isAdmin) {
-      console.log('Not admin, ignoring removeTeam');
-      return;
-    }
-    if (gameState.teams.length <= 2) return; // Keep at least 2 teams
+    if (!socket.isAdmin) return;
+    if (gameState.teams.length <= 2) return;
     gameState.teams = gameState.teams.filter(t => t.id !== teamId);
     if (gameState.round3.activeTeamId === teamId) {
       gameState.round3.activeTeamId = null;
@@ -174,6 +165,26 @@ io.on('connection', (socket) => {
       gameState.round3.timerRunning = false;
     }
     io.emit('gameState', gameState);
+  });
+
+  // Round 1: Start category lottery
+  socket.on('startCategoryLottery', () => {
+    if (!socket.isAdmin) return;
+
+    // Get categories with remaining tracks
+    const availableCategories = gameState.round1Categories.filter(c => c.remainingTracks > 0);
+    if (availableCategories.length === 0) return;
+
+    // Pick random winner
+    const winnerIndex = Math.floor(Math.random() * availableCategories.length);
+    const winner = availableCategories[winnerIndex];
+
+    // Broadcast lottery start to all clients
+    io.emit('categoryLotteryStart', {
+      categories: availableCategories,
+      winnerId: winner.id,
+      duration: 7000
+    });
   });
 
   // Round 3: Select active team

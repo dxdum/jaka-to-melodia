@@ -504,6 +504,73 @@
             letter-spacing: 2px;
         }
 
+        /* Lottery Overlay */
+        .lottery-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        .lottery-overlay.active {
+            display: flex;
+        }
+
+        .lottery-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #ff9500;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            text-shadow: 0 0 30px rgba(255, 149, 0, 0.5);
+        }
+
+        .lottery-category {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            padding: 40px 60px;
+            background: linear-gradient(135deg, rgba(255, 107, 0, 0.2), rgba(255, 149, 0, 0.2));
+            border: 3px solid #ff9500;
+            border-radius: 8px;
+            min-width: 600px;
+            max-width: 90vw;
+            box-shadow: 0 0 60px rgba(255, 149, 0, 0.3);
+            transition: all 0.1s ease;
+        }
+
+        .lottery-category.winner {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 212, 255, 0.3));
+            border-color: #00ff88;
+            color: #00ff88;
+            box-shadow: 0 0 100px rgba(0, 255, 136, 0.5);
+            animation: winnerPulse 0.5s ease-in-out infinite;
+            transform: scale(1.1);
+        }
+
+        @keyframes winnerPulse {
+            0%, 100% { box-shadow: 0 0 60px rgba(0, 255, 136, 0.5); }
+            50% { box-shadow: 0 0 120px rgba(0, 255, 136, 0.8); }
+        }
+
+        .lottery-subtitle {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 30px;
+            letter-spacing: 2px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
@@ -571,6 +638,13 @@
     </div>
 
     <div class="connection-status connected" id="connectionStatus">LIVE</div>
+
+    <!-- Lottery Overlay -->
+    <div class="lottery-overlay" id="lotteryOverlay">
+        <div class="lottery-title">LOSOWANIE KATEGORII</div>
+        <div class="lottery-category" id="lotteryCategory">---</div>
+        <div class="lottery-subtitle" id="lotterySubtitle">Losowanie...</div>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -723,6 +797,57 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        // Lottery animation handler
+        socket.on('categoryLotteryStart', (data) => {
+            const overlay = document.getElementById('lotteryOverlay');
+            const categoryDisplay = document.getElementById('lotteryCategory');
+            const subtitle = document.getElementById('lotterySubtitle');
+            const categories = data.categories;
+            const winnerId = data.winnerId;
+            const duration = data.duration;
+
+            // Show overlay
+            overlay.classList.add('active');
+            categoryDisplay.classList.remove('winner');
+            subtitle.textContent = 'Losowanie...';
+
+            // Animation settings - slow down over time
+            let currentIndex = 0;
+            let interval = 50; // Start fast
+            let elapsed = 0;
+            const maxInterval = 500; // End slow
+
+            function animate() {
+                // Display current category
+                categoryDisplay.textContent = categories[currentIndex].name;
+                currentIndex = (currentIndex + 1) % categories.length;
+
+                elapsed += interval;
+
+                if (elapsed < duration - 1000) {
+                    // Gradually slow down
+                    const progress = elapsed / (duration - 1000);
+                    interval = 50 + (maxInterval - 50) * Math.pow(progress, 2);
+                    setTimeout(animate, interval);
+                } else {
+                    // Final reveal - show winner
+                    const winner = categories.find(c => c.id === winnerId);
+                    categoryDisplay.textContent = winner.name;
+                    categoryDisplay.classList.add('winner');
+                    subtitle.textContent = 'WYLOSOWANA KATEGORIA!';
+
+                    // Hide overlay after 5 seconds
+                    setTimeout(() => {
+                        overlay.classList.remove('active');
+                        categoryDisplay.classList.remove('winner');
+                    }, 5000);
+                }
+            }
+
+            // Start animation
+            animate();
+        });
     </script>
 </body>
 </html>

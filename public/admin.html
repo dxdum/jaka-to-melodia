@@ -548,6 +548,37 @@
             font-weight: 700;
         }
 
+        /* Lottery Button */
+        .lottery-btn {
+            display: block;
+            width: 100%;
+            padding: 16px 32px;
+            margin-bottom: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 107, 0, 0.3);
+        }
+
+        .lottery-btn:hover {
+            box-shadow: 0 0 40px rgba(255, 107, 0, 0.5);
+            transform: scale(1.02);
+        }
+
+        .lottery-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         /* Reset Button */
         .reset-btn {
             display: block;
@@ -651,6 +682,7 @@
 
         <div class="section" id="round1Section">
             <h2>Round 1 — Categories</h2>
+            <button class="lottery-btn" id="lotteryBtn" onclick="startLottery()">🎰 LOSUJ KATEGORIĘ</button>
             <div class="categories-grid" id="round1Categories"></div>
         </div>
 
@@ -800,18 +832,15 @@
         }
 
         function addTeam() {
-            console.log('addTeam called, emitting socket event...');
             socket.emit('addTeam');
         }
 
         function removeTeam(teamId) {
-            console.log('removeTeam called for team:', teamId);
             if (gameState.teams.length <= 2) {
                 alert('Minimum 2 drużyny!');
                 return;
             }
             if (confirm('Usunąć tę drużynę?')) {
-                console.log('Confirmed, emitting removeTeam event...');
                 socket.emit('removeTeam', teamId);
             }
         }
@@ -884,6 +913,19 @@
             if (confirm('Reset all progress?')) {
                 socket.emit('resetGame');
             }
+        }
+
+        function startLottery() {
+            const availableCategories = gameState.round1Categories.filter(c => c.remainingTracks > 0);
+            if (availableCategories.length === 0) {
+                alert('Brak dostępnych kategorii!');
+                return;
+            }
+            document.getElementById('lotteryBtn').disabled = true;
+            socket.emit('startCategoryLottery');
+            setTimeout(() => {
+                document.getElementById('lotteryBtn').disabled = false;
+            }, 8000);
         }
 
         function escapeHtml(text) {
