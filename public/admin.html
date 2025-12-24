@@ -762,6 +762,7 @@
             updateRound1Categories();
             updateRound2Categories();
             updateRound3Controls();
+            updateLotteryButton();
         }
 
         function updateRoundButtons() {
@@ -916,6 +917,7 @@
         }
 
         function startLottery() {
+            if (gameState.currentRound !== 1) return;
             const availableCategories = gameState.round1Categories.filter(c => c.remainingTracks > 0);
             if (availableCategories.length === 0) {
                 alert('Brak dostępnych kategorii!');
@@ -926,6 +928,15 @@
             setTimeout(() => {
                 document.getElementById('lotteryBtn').disabled = false;
             }, 8000);
+        }
+
+        function updateLotteryButton() {
+            const btn = document.getElementById('lotteryBtn');
+            if (gameState.currentRound === 1) {
+                btn.style.display = 'block';
+            } else {
+                btn.style.display = 'none';
+            }
         }
 
         function escapeHtml(text) {
