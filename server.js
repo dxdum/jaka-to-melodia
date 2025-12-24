@@ -25,12 +25,14 @@ let gameState = {
   ],
   round1Categories: [
     { id: 1, name: 'POLSKIE PRZEBOJE WSZECH CZASÓW', totalTracks: 7, remainingTracks: 7, pointsRule: 'tytuł 1pkt, wykonawca 1pkt' },
-    { id: 2, name: 'MUZYKA Z BAJEK I FILMÓW DLA DZIECI', totalTracks: 7, remainingTracks: 7, pointsRule: 'Jaka to bajka 1pkt' },
+    { id: 2, name: 'MUZYKA Z BAJEK I FILMÓW DLA DZIECI', totalTracks: 6, remainingTracks: 6, pointsRule: 'Jaka to bajka 1pkt' },
     { id: 3, name: 'WSPÓŁCZESNE HITY RADIOWE', totalTracks: 3, remainingTracks: 3, pointsRule: 'Tytuł 1pkt, Wykonawca 1pkt' },
-    { id: 4, name: 'FILMY', totalTracks: 4, remainingTracks: 4, pointsRule: 'Zgadnij film 1pkt' },
+    { id: 4, name: 'FILMY', totalTracks: 5, remainingTracks: 5, pointsRule: 'Zgadnij film 1pkt' },
     { id: 5, name: 'DISCO POLO & IMPREZY', totalTracks: 5, remainingTracks: 5, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' },
     { id: 6, name: 'HITY LAT 90 - POLSKA I ŚWIAT', totalTracks: 5, remainingTracks: 5, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' },
-    { id: 7, name: 'HITY LAT 80 - ŚWIAT', totalTracks: 5, remainingTracks: 5, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' }
+    { id: 7, name: 'HITY LAT 80 - ŚWIAT', totalTracks: 5, remainingTracks: 5, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' },
+    { id: 8, name: 'HITY LAT 60 - ŚWIAT', totalTracks: 5, remainingTracks: 5, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' },
+    { id: 9, name: 'HITY LAT 60 - POLSKA', totalTracks: 6, remainingTracks: 6, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' }
   ],
   round2Categories: [
     { id: 1, name: 'Polskie Hity', totalTracks: 3, remainingTracks: 3 },
