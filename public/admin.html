@@ -763,6 +763,7 @@
             updateRound2Categories();
             updateRound3Controls();
             updateLotteryButton();
+            updateRoundSections();
         }
 
         function updateRoundButtons() {
@@ -937,6 +938,13 @@
             } else {
                 btn.style.display = 'none';
             }
+        }
+
+        function updateRoundSections() {
+            // Show/hide sections based on current round
+            document.getElementById('round1Section').style.display = gameState.currentRound === 1 ? 'block' : 'none';
+            document.getElementById('round2Section').style.display = gameState.currentRound === 2 ? 'block' : 'none';
+            document.getElementById('round3Section').style.display = gameState.currentRound === 3 ? 'block' : 'none';
         }
 
         function escapeHtml(text) {
