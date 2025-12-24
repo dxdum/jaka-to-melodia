@@ -32,7 +32,9 @@ let gameState = {
     { id: 6, name: 'HITY LAT 90 - POLSKA I ŚWIAT', totalTracks: 5, remainingTracks: 5, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' },
     { id: 7, name: 'HITY LAT 80 - ŚWIAT', totalTracks: 5, remainingTracks: 5, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' },
     { id: 8, name: 'HITY LAT 60 - ŚWIAT', totalTracks: 5, remainingTracks: 5, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' },
-    { id: 9, name: 'HITY LAT 60 - POLSKA', totalTracks: 6, remainingTracks: 6, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' }
+    { id: 9, name: 'HITY LAT 60 - POLSKA', totalTracks: 6, remainingTracks: 6, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' },
+    { id: 10, name: 'HITY LAT 70 - POLSKA', totalTracks: 5, remainingTracks: 5, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' },
+    { id: 11, name: 'HITY LAT 70 - ŚWIAT', totalTracks: 5, remainingTracks: 5, pointsRule: 'Wykonawca 1pkt, Tytuł 1pkt' }
   ],
   round2Categories: [
     { id: 1, name: 'Polskie Hity', totalTracks: 3, remainingTracks: 3 },
