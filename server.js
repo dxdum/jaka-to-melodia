@@ -45,7 +45,11 @@ let gameState = {
     { id: 6, name: 'Lata 90.', totalTracks: 3, remainingTracks: 3 },
     { id: 7, name: 'Lata 2000.', totalTracks: 3, remainingTracks: 3 },
     { id: 8, name: 'Rockowe', totalTracks: 3, remainingTracks: 3 },
-    { id: 9, name: 'Metalowe', totalTracks: 3, remainingTracks: 3 }
+    { id: 9, name: 'Metalowe', totalTracks: 3, remainingTracks: 3 },
+    { id: 10, name: 'Polska 60s', totalTracks: 5, remainingTracks: 5 },
+    { id: 11, name: 'Świat 60s', totalTracks: 5, remainingTracks: 5 },
+    { id: 12, name: 'Polska 70s', totalTracks: 5, remainingTracks: 5 },
+    { id: 13, name: 'Świat 70s', totalTracks: 5, remainingTracks: 5 }
   ],
   // Round 3 state
   round3: {
